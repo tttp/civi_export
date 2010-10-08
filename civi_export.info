@@ -1,0 +1,7 @@
+name = CiviCRM Export
+description = Export into an excel format directly instead of csv
+version = 3.2
+package = CiviCRM
+dependencies[] = civicrm
+core = 6.x
+php = 5.2

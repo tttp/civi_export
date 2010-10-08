@@ -1,0 +1,11 @@
+A software company that produces the dominant speadsheet software has been highly creative as what the "C" in "CSV" stands for. In a french version of Excel, it expects as ";" as separator, but a "," in a US version.
+
+Moreover, the charset is always implicit and never UTF-8. To add insult to injury, there isn't any way for the end user to choose what it the charset.
+
+Bottom line, there isn't any way to be able to generate a csv that would be always properly read by the dominant speadsheet. That's almost as if done on purpose to make harder to communicate with the "outside" world. Who would be deviant enough to do that on purpose ?
+
+Long story short, the dominant spreadsheet is able to convert from an html table into its internal format with minimum complaints, hence bypassing all these csv joy.
+
+Kurund has implemented a hook during the code sprint in Bristol, making the magic possible and the dream true.
+
+X+
