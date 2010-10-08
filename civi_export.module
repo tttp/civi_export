@@ -1,5 +1,11 @@
 <?php
 
+/*
+* Copyright (C) 2009-2010 Tech To The People Xavier Dutoit
+* Licensed to CiviCRM under the Academic Free License version 3.0.
+*
+*/
+
 function civi_export_civicrm_export( $exportTempTable, $headerRows, $sqlColumns, $exportMode ) {
     $writeHeader = true;
     $offset = 0;
