@@ -7,40 +7,60 @@
 */
 
 function civi_export_civicrm_export( $exportTempTable, $headerRows, $sqlColumns, $exportMode ) {
+  require_once 'CRM/Core/Config.php';
+  $tabletool="/".drupal_get_path('module', 'civi_export'). "/tabletools/media";
+
+
+  $config   = CRM_Core_Config::singleton( );
+  $base = $config->userFrameworkResourceURL . "packages/jquery";
+  echo "<head><title>civicrm_export</title>";
+  echo "<script src='{$base}/jquery.js'></script>";
+  echo "<script src='{$base}/plugins/jquery.dataTables.min.js'></script>";
+
+  echo '<script type="text/javascript" charset="utf-8" src="'.$tabletool.'/ZeroClipboard/ZeroClipboard.js"></script>';
+  echo '<script type="text/javascript" charset="utf-8" src="'.$tabletool.'/js/TableTools.js"></script>';
+          /* You might need to set the sSwfPath! Something like:
+         *   TableToolsInit.sSwfPath = "/media/swf/ZeroClipboard.swf";
+         */
+  
+  echo "\n<script>TableToolsInit.sSwfPath = '$tabletool/swf/ZeroClipboard.swf'; $(function($){ $('table').dataTable({'bPaginate': false,'bJQueryUI': true, 'sDom': 'T<\"clear\">lfrt','aaSorting':[]  }); }) ;</script>";
+  echo "\n<link type='text/css' rel='stylesheet' media='all'  href='{$base}/jquery-ui-1.8.5/css/custom-theme/jquery-ui-1.8.5.custom.css'></link> ";
+  echo "<link type='text/css' rel='stylesheet' media='screen'  href='{$tabletool}/css/TableTools.css'></link>";
+  echo "\n<style media='screen'>th {padding-right:16px} .ui-icon {float:left;}</style></head><body>";
     $writeHeader = true;
     $offset = 0;
     $limit  = 200;
-
-    $query = "
-SELECT *
-FROM   $exportTempTable
-";
+    $query = "SELECT * FROM   $exportTempTable";
     require_once 'CRM/Core/Report/Excel.php';
-    while ( 1 ) {
-        $limitQuery = $query . "
-LIMIT $offset, $limit
-";
-        $dao = CRM_Core_DAO::executeQuery( $limitQuery );
+//    while ( 1 ) {
+//        $limit = $query . "LIMIT $offset, $limit";
+        $dao = CRM_Core_DAO::executeQuery( $query );
 
         if ( $dao->N <= 0 ) {
             break;
         }
+        echo "<table id='list' class='ui-widget'><thead class='ui-widget-header'><tr>\n";
+        foreach ($headerRows as $th) {
+          echo "<th>$th</th>";
+        }
+        echo "\n</thead><tbody class='ui-widget-content'>";
+
 
         $componentDetails = array( );
         while ( $dao->fetch( ) ) {
-            $row = array( );
-
+            echo "\n<tr>";
             foreach ( $sqlColumns as $column => $dontCare ) {
-                $row[$column] = $dao->$column;
+                echo "<td>".$dao->$column."</td>";
             }
 
-            $componentDetails[] = $row;
+            echo "</tr>";
         }
-        CRM_Core_Report_Excel::writeHTMLFile( "Export_Records", $headerRows,
-                                             $componentDetails, null, $writeHeader );
+//        CRM_Core_Report_Excel::writeHTMLFile( "Export_Records", $headerRows,
+//                                             $componentDetails, null, $writeHeader );
         $writeHeader = false;
         $offset += $limit;
-    }
+        echo "\n</tbody></table>";
+//    }
     
     CRM_Utils_System::civiExit( );
 }
