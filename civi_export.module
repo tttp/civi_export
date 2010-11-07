@@ -6,10 +6,22 @@
 *
 */
 
+function civi_export_civicrm_buildForm ( $formName, &$form ) {
+  if ($formName  == "CRM_Contact_Form_Task_Print") {
+
+    $tabletool="/".drupal_get_path('module', 'civi_export'). "/tabletools/media";
+
+    $template = CRM_Core_Smarty::singleton( );
+
+    $template->assign ("tabletool",$tabletool);
+    $dir = dirname(__FILE__). "/templates/";
+    array_unshift ( $template->template_dir,$dir);
+  }
+}
+
 function civi_export_civicrm_export( $exportTempTable, $headerRows, $sqlColumns, $exportMode ) {
   require_once 'CRM/Core/Config.php';
   $tabletool="/".drupal_get_path('module', 'civi_export'). "/tabletools/media";
-
 
   $config   = CRM_Core_Config::singleton( );
   $base = $config->userFrameworkResourceURL . "packages/jquery";
